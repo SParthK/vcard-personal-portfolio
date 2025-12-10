@@ -134,6 +134,24 @@ for (let i = 0; i < formInputs.length; i++) {
   });
 }
 
+// add event to form submit
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  // get form values
+  const fullname = form.querySelector('input[name="fullname"]').value;
+  const email = form.querySelector('input[name="email"]').value;
+  const message = form.querySelector('textarea[name="message"]').value;
+
+  // create mailto link with inquiry subject
+  const subject = encodeURIComponent("Inquiry");
+  const body = encodeURIComponent(`Name: ${fullname}\nEmail: ${email}\n\nMessage:\n${message}`);
+  const mailtoLink = `mailto:parthshingala00@gmail.com?subject=${subject}&body=${body}`;
+
+  // open email client
+  window.location.href = mailtoLink;
+});
+
 
 
 // page navigation variables
@@ -155,5 +173,58 @@ for (let i = 0; i < navigationLinks.length; i++) {
       }
     }
 
+  });
+}
+
+
+
+// copy to clipboard functionality
+const copyButtons = document.querySelectorAll("[data-copy]");
+
+for (let i = 0; i < copyButtons.length; i++) {
+  copyButtons[i].addEventListener("click", async function () {
+    const textToCopy = this.getAttribute("data-copy");
+    
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      
+      // Visual feedback
+      const originalIcon = this.querySelector("ion-icon");
+      const originalName = originalIcon.getAttribute("name");
+      
+      // Change icon to checkmark
+      originalIcon.setAttribute("name", "checkmark-outline");
+      this.classList.add("copied");
+      
+      // Reset after 2 seconds
+      setTimeout(() => {
+        originalIcon.setAttribute("name", originalName);
+        this.classList.remove("copied");
+      }, 2000);
+      
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+      // Fallback for older browsers
+      const textArea = document.createElement("textarea");
+      textArea.value = textToCopy;
+      textArea.style.position = "fixed";
+      textArea.style.opacity = "0";
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand("copy");
+        const originalIcon = this.querySelector("ion-icon");
+        const originalName = originalIcon.getAttribute("name");
+        originalIcon.setAttribute("name", "checkmark-outline");
+        this.classList.add("copied");
+        setTimeout(() => {
+          originalIcon.setAttribute("name", originalName);
+          this.classList.remove("copied");
+        }, 2000);
+      } catch (fallbackErr) {
+        console.error("Fallback copy failed: ", fallbackErr);
+      }
+      document.body.removeChild(textArea);
+    }
   });
 }
