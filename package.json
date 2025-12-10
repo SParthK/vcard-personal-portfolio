@@ -1,7 +1,7 @@
 {
   "name": "vcard-personal-portfolio",
   "version": "1.0.0",
-  "description": "Personal portfolio website built with HTML, CSS, and JavaScript",
+  "description": "Parth Shingala - Senior Flutter Developer Portfolio",
   "main": "index.html",
   "scripts": {
     "start": "npx serve .",
